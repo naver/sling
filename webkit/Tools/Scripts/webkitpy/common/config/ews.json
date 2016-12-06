@@ -1,0 +1,54 @@
+{
+    "GTK WK2 EWS": {
+        "port": "gtk-wk2",
+        "watchers": [
+            "xan.lopez@gmail.com"
+        ]
+    },
+    "EFL WK2 EWS": {
+        "port": "efl-wk2",
+        "watchers": [
+            "gyuyoung.kim@webkit.org"
+        ]
+    },
+    "Win EWS": {
+        "port": "win",
+        "watchers": [
+            "bfulgham@apple.com"
+        ]
+    },
+    "iOS EWS": {
+        "port": "ios",
+        "architecture": "armv7s"
+    },
+    "iOS Simulator EWS": {
+        "port": "ios-simulator-wk2",
+        "name": "ios-sim-ews",
+        "runTests": true
+    },
+    "Mac EWS": {
+        "port": "mac",
+        "watchers": [
+            "rniwa@webkit.org"
+        ],
+        "runTests": true
+    },
+    "Mac WK2 EWS": {
+        "port": "mac-wk2",
+        "watchers": [
+            "rniwa@webkit.org"
+        ],
+        "runTests": true
+    },
+    "Mac Debug EWS": {
+        "port": "mac",
+        "name": "mac-debug-ews",
+        "style": "debug",
+        "runTests": true
+    },
+    "Mac 32-bit EWS": {
+        "port": "mac",
+        "name": "mac-32bit-ews",
+        "architecture": "i386"
+    }
+}

@@ -1,0 +1,72 @@
+/*
+ * Copyright (C) 2006, 2007, 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+[
+#if defined(ENABLE_CUSTOM_ELEMENTS) && ENABLE_CUSTOM_ELEMENTS
+    CustomConstructor(),
+#endif
+    JSGenerateToNativeObject,
+    JSCustomPushEventHandlerScope,
+    ExportMacro=WEBCORE_EXPORT,
+] interface HTMLElement : Element {
+    [Reflect] attribute DOMString title;
+    [Reflect] attribute DOMString lang;
+    attribute boolean translate;
+    attribute DOMString dir;
+
+    attribute long tabIndex;
+    attribute boolean draggable;
+
+    [Reflect] attribute DOMString webkitdropzone;
+    // FIXME: Support the standard HTML equivalent.
+    // [PutForwards=value] readonly attribute DOMTokenList dropzone;
+
+    [Reflect] attribute boolean hidden;
+    [Reflect] attribute DOMString accessKey;
+
+    [TreatNullAs=EmptyString, SetterRaisesException] attribute DOMString innerText;
+    [TreatNullAs=EmptyString, SetterRaisesException] attribute DOMString outerText;
+
+    [RaisesException] Element insertAdjacentElement(DOMString where, Element element);
+
+    // FIXME: Using "undefined" as default parameter value is wrong.
+    [RaisesException] void insertAdjacentHTML(optional DOMString where = "undefined", optional DOMString html = "undefined");
+    [RaisesException] void insertAdjacentText(optional DOMString where = "undefined", optional DOMString text = "undefined");
+
+    [SetterRaisesException] attribute DOMString contentEditable;
+    readonly attribute boolean isContentEditable;
+
+    attribute boolean spellcheck;
+
+    void click();
+
+#if defined(LANGUAGE_JAVASCRIPT) && LANGUAGE_JAVASCRIPT
+    void focus();
+    void blur();
+#endif
+
+#if defined(LANGUAGE_OBJECTIVE_C) && LANGUAGE_OBJECTIVE_C
+    [Reflect] attribute DOMString id;
+    readonly attribute HTMLCollection children;
+    readonly attribute DOMString titleDisplayString;
+#endif
+};
+
+HTMLElement implements GlobalEventHandlers;

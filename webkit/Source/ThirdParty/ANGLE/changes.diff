@@ -1,0 +1,175 @@
+diff --git a/include/GLSLANG/ShaderLang.h b/include/GLSLANG/ShaderLang.h
+index 78f8ef6..b7fdf55 100644
+--- a/include/GLSLANG/ShaderLang.h
++++ b/include/GLSLANG/ShaderLang.h
+@@ -25,7 +25,7 @@
+ 
+ #include <stddef.h>
+ 
+-#include "KHR/khrplatform.h"
++#include "khrplatform.h"
+ 
+ #include <map>
+ #include <string>
+@@ -343,7 +343,7 @@ COMPILER_EXPORT const std::string &ShGetBuiltInResourcesString(const ShHandle ha
+ // type: Specifies the type of shader - GL_FRAGMENT_SHADER or GL_VERTEX_SHADER.
+ // spec: Specifies the language spec the compiler must conform to -
+ //       SH_GLES2_SPEC or SH_WEBGL_SPEC.
+-// output: Specifies the output code type - for example SH_ESSL_OUTPUT, SH_GLSL_OUTPUT,
++// output: Specifies the output code type - for example SH_ESSL_OUTPUT, SH_GLSL_COMPATIBILITY_OUTPUT,
+ //         SH_HLSL_3_0_OUTPUT or SH_HLSL_4_1_OUTPUT. Note: Each output type may only
+ //         be supported in some configurations.
+ // resources: Specifies the built-in resources.
+diff --git a/src/common/version.h b/src/common/version.h
+index e7ffa7c..b653ae3 100644
+--- a/src/common/version.h
++++ b/src/common/version.h
+@@ -7,7 +7,7 @@
+ #ifndef COMMON_VERSION_H_
+ #define COMMON_VERSION_H_
+ 
+-#include "id/commit.h"
++#include "commit.h"
+ 
+ #define ANGLE_MAJOR_VERSION 2
+ #define ANGLE_MINOR_VERSION 1
+diff --git a/src/compiler/preprocessor/ExpressionParser.cpp b/src/compiler/preprocessor/ExpressionParser.cpp
+index 193b150..b38b7ae 100644
+--- a/src/compiler/preprocessor/ExpressionParser.cpp
++++ b/src/compiler/preprocessor/ExpressionParser.cpp
+@@ -1,5 +1,7 @@
+ /* A Bison parser, made by GNU Bison 3.0.4.  */
+ 
++/* Apple Note: For the avoidance of doubt, Apple elects to distribute this file under the terms of the BSD license. */
++
+ /* Bison implementation for Yacc-like parsers in C
+ 
+    Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+diff --git a/src/compiler/preprocessor/Tokenizer.cpp b/src/compiler/preprocessor/Tokenizer.cpp
+index eb6156f..1caee47 100644
+--- a/src/compiler/preprocessor/Tokenizer.cpp
++++ b/src/compiler/preprocessor/Tokenizer.cpp
+@@ -712,7 +712,7 @@ static void yy_flex_strncpy (char *,yyconst char *,int ,yyscan_t yyscanner);
+ static int yy_flex_strlen (yyconst char * ,yyscan_t yyscanner);
+ #endif
+ 
+-#ifndef YY_NO_INPUT
++#if 0 //#ifndef YY_NO_INPUT
+ 
+ #ifdef __cplusplus
+ static int yyinput (yyscan_t yyscanner );
+@@ -1526,7 +1526,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
+        return yy_is_jam ? 0 : yy_current_state;
+ }
+ 
+-#ifndef YY_NO_INPUT
++#if 0 //#ifndef YY_NO_INPUT
+ #ifdef __cplusplus
+     static int yyinput (yyscan_t yyscanner)
+ #else
+diff --git a/src/compiler/translator/CodeGen.cpp b/src/compiler/translator/CodeGen.cpp
+index f099bcc..fe7c4f1 100644
+--- a/src/compiler/translator/CodeGen.cpp
++++ b/src/compiler/translator/CodeGen.cpp
+@@ -4,6 +4,8 @@
+ // found in the LICENSE file.
+ //
+ 
++#include "compiler/translator/Compiler.h"
++
+ #ifdef ANGLE_ENABLE_ESSL
+ #include "compiler/translator/TranslatorESSL.h"
+ #endif
+diff --git a/src/compiler/translator/ShaderLang.cpp b/src/compiler/translator/ShaderLang.cpp
+index 421597b..a58e917 100644
+--- a/src/compiler/translator/ShaderLang.cpp
++++ b/src/compiler/translator/ShaderLang.cpp
+@@ -374,4 +374,4 @@ const std::map<std::string, unsigned int> *ShGetUniformRegisterMap(const ShHandl
+     static std::map<std::string, unsigned int> map;
+     return &map;
+ #endif  // ANGLE_ENABLE_HLSL
+-}
+\ No newline at end of file
++}
+diff --git a/src/compiler/translator/TranslatorHLSL.cpp b/src/compiler/translator/TranslatorHLSL.cpp
+index 111a38b..2940260 100644
+--- a/src/compiler/translator/TranslatorHLSL.cpp
++++ b/src/compiler/translator/TranslatorHLSL.cpp
+@@ -75,4 +75,4 @@ unsigned int TranslatorHLSL::getInterfaceBlockRegister(const std::string &interf
+ const std::map<std::string, unsigned int> *TranslatorHLSL::getUniformRegisterMap() const
+ {
+     return &mUniformRegisterMap;
+-}
+\ No newline at end of file
++}
+diff --git a/src/compiler/translator/TranslatorHLSL.h b/src/compiler/translator/TranslatorHLSL.h
+index 40cfd70..4e84612 100644
+--- a/src/compiler/translator/TranslatorHLSL.h
++++ b/src/compiler/translator/TranslatorHLSL.h
+@@ -13,7 +13,9 @@ class TranslatorHLSL : public TCompiler
+ {
+   public:
+     TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
++#ifdef ANGLE_ENABLE_HLSL
+     TranslatorHLSL *getAsTranslatorHLSL() override { return this; }
++#endif
+ 
+     bool hasInterfaceBlock(const std::string &interfaceBlockName) const;
+     unsigned int getInterfaceBlockRegister(const std::string &interfaceBlockName) const;
+diff --git a/src/compiler/translator/glslang_lex.cpp b/src/compiler/translator/glslang_lex.cpp
+index ff6c2d6..1af876b 100644
+--- a/src/compiler/translator/glslang_lex.cpp
++++ b/src/compiler/translator/glslang_lex.cpp
+@@ -2090,7 +2090,7 @@ case YY_STATE_EOF(FIELDS):
+        YY_BREAK
+ case 239:
+ YY_RULE_SETUP
+-{ assert(false); return 0; }
++{ return 0; }
+        YY_BREAK
+ case 240:
+ YY_RULE_SETUP
+diff --git a/src/compiler/translator/glslang_tab.cpp b/src/compiler/translator/glslang_tab.cpp
+index 8b4fbd2..a799d29 100644
+--- a/src/compiler/translator/glslang_tab.cpp
++++ b/src/compiler/translator/glslang_tab.cpp
+@@ -1,5 +1,7 @@
+ /* A Bison parser, made by GNU Bison 3.0.4.  */
+ 
++/* Apple Note: For the avoidance of doubt, Apple elects to distribute this file under the terms of the BSD license. */
++
+ /* Bison implementation for Yacc-like parsers in C
+ 
+    Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+diff --git a/src/compiler/translator/glslang_tab.h b/src/compiler/translator/glslang_tab.h
+index 7331594..eb7ef39 100644
+--- a/src/compiler/translator/glslang_tab.h
++++ b/src/compiler/translator/glslang_tab.h
+@@ -1,5 +1,7 @@
+ /* A Bison parser, made by GNU Bison 3.0.4.  */
+ 
++/* Apple Note: For the avoidance of doubt, Apple elects to distribute this file under the terms of the BSD license. */
++
+ /* Bison interface for Yacc-like parsers in C
+ 
+    Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+diff --git a/src/libANGLE/Display.cpp b/src/libANGLE/Display.cpp
+index c94dff2..4de579b 100644
+--- a/src/libANGLE/Display.cpp
++++ b/src/libANGLE/Display.cpp
+@@ -139,6 +139,7 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap)
+     switch (displayType)
+     {
+       case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
++#if defined(ANGLE_ENABLE_OPENGL)
+ #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+         // Default to D3D displays
+         impl = new rx::DisplayD3D();
+@@ -150,6 +151,7 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap)
+         // No display available
+         UNREACHABLE();
+ #endif
++#endif
+         break;
+ 
+       case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:

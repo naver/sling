@@ -1,0 +1,134 @@
+/*
+ * Copyright (C) 2007, 2010, 2011, 2012 Apple Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE INC. OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
+
+[
+    ActiveDOMObject,
+    Conditional=VIDEO,
+    ExportMacro=WEBCORE_EXPORT,
+    JSGenerateToNativeObject,
+] interface HTMLMediaElement : HTMLElement {
+
+    // error state
+    readonly attribute MediaError error;
+
+    // network state
+    [Reflect, URL] attribute DOMString src;
+    [URL] readonly attribute DOMString currentSrc;
+    attribute DOMString? crossOrigin;
+
+    const unsigned short NETWORK_EMPTY = 0;
+    const unsigned short NETWORK_IDLE = 1;
+    const unsigned short NETWORK_LOADING = 2;
+    const unsigned short NETWORK_NO_SOURCE = 3;
+    readonly attribute unsigned short networkState;
+    attribute DOMString preload;
+
+    readonly attribute TimeRanges buffered;
+    void load();
+
+    // FIXME: Using "undefined" as default parameter value is wrong.
+#if (defined(ENABLE_ENCRYPTED_MEDIA) && ENABLE_ENCRYPTED_MEDIA) || (defined(ENABLE_ENCRYPTED_MEDIA_V2) && ENABLE_ENCRYPTED_MEDIA_V2)
+    DOMString canPlayType(optional DOMString type = "undefined", optional DOMString? keySystem = null);
+#else
+    DOMString canPlayType(optional DOMString type = "undefined");
+#endif
+
+    // ready state
+    const unsigned short HAVE_NOTHING = 0;
+    const unsigned short HAVE_METADATA = 1;
+    const unsigned short HAVE_CURRENT_DATA = 2;
+    const unsigned short HAVE_FUTURE_DATA = 3;
+    const unsigned short HAVE_ENOUGH_DATA = 4;
+    readonly attribute unsigned short readyState;
+    readonly attribute boolean seeking;
+
+    // playback state
+    [SetterRaisesException] attribute unrestricted double currentTime;
+    readonly attribute unrestricted double duration;
+    [TreatReturnedNaNDateAs=NaN] Date getStartDate();
+    readonly attribute boolean paused;
+    attribute unrestricted double defaultPlaybackRate;
+    attribute unrestricted double playbackRate;
+    readonly attribute TimeRanges played;
+    readonly attribute TimeRanges seekable;
+    readonly attribute boolean ended;
+    [Reflect] attribute boolean autoplay;
+    [Reflect] attribute boolean loop;
+#if !defined(LANGUAGE_OBJECTIVE_C) || !LANGUAGE_OBJECTIVE_C
+    Promise play();
+#else
+    void play();
+#endif
+    void pause();
+    void fastSeek(unrestricted double time);
+
+    // controls
+    attribute boolean controls;
+    [SetterRaisesException] attribute unrestricted double volume;
+    attribute boolean muted;
+    [Reflect=muted] attribute boolean defaultMuted;
+
+    // WebKit extensions
+    attribute boolean webkitPreservesPitch;
+
+    readonly attribute boolean webkitHasClosedCaptions;
+    attribute boolean webkitClosedCaptionsVisible;
+
+#if !defined(LANGUAGE_OBJECTIVE_C) || !LANGUAGE_OBJECTIVE_C
+    // The number of bytes consumed by the media decoder.
+    [Conditional=MEDIA_STATISTICS] readonly attribute unsigned long webkitAudioDecodedByteCount;
+    [Conditional=MEDIA_STATISTICS] readonly attribute unsigned long webkitVideoDecodedByteCount;
+#endif
+
+#if (!defined(LANGUAGE_GOBJECT) || !LANGUAGE_GOBJECT) && (!defined(LANGUAGE_OBJECTIVE_C) || !LANGUAGE_OBJECTIVE_C)
+    [Conditional=ENCRYPTED_MEDIA, RaisesException] void webkitGenerateKeyRequest(DOMString? keySystem, optional Uint8Array? initData = null);
+    [Conditional=ENCRYPTED_MEDIA, RaisesException] void webkitAddKey(DOMString? keySystem, Uint8Array key, optional Uint8Array? initData = null, optional DOMString sessionId);
+    [Conditional=ENCRYPTED_MEDIA, RaisesException] void webkitCancelKeyRequest(DOMString? keySystem, optional DOMString sessionId);
+
+    [Conditional=ENCRYPTED_MEDIA_V2, ImplementedAs=keys] readonly attribute MediaKeys webkitKeys;
+    [Conditional=ENCRYPTED_MEDIA_V2, ImplementedAs=setMediaKeys] void webkitSetMediaKeys(MediaKeys? mediaKeys);
+
+    [Conditional=VIDEO_TRACK, RaisesException] TextTrack addTextTrack(DOMString kind, optional DOMString label = "", optional DOMString language = "");
+    [Conditional=VIDEO_TRACK] readonly attribute AudioTrackList audioTracks;
+    [Conditional=VIDEO_TRACK] readonly attribute TextTrackList textTracks;
+    [Conditional=VIDEO_TRACK] readonly attribute VideoTrackList videoTracks;
+#endif
+
+    // FIXME: This should not use [TreatNullAs=LegacyNullString].
+    [Reflect, TreatNullAs=LegacyNullString] attribute DOMString mediaGroup;
+
+#if !defined(LANGUAGE_OBJECTIVE_C) || !LANGUAGE_OBJECTIVE_C
+    [CustomSetter] attribute MediaController controller;
+#endif
+
+#if (!defined(LANGUAGE_GOBJECT) || !LANGUAGE_GOBJECT) && (!defined(LANGUAGE_OBJECTIVE_C) || !LANGUAGE_OBJECTIVE_C)
+    [Conditional=MEDIA_SOURCE] VideoPlaybackQuality getVideoPlaybackQuality();
+#endif
+
+#if !defined(LANGUAGE_OBJECTIVE_C) || !LANGUAGE_OBJECTIVE_C
+    [Conditional=WIRELESS_PLAYBACK_TARGET] void webkitShowPlaybackTargetPicker();
+    [Conditional=WIRELESS_PLAYBACK_TARGET] readonly attribute boolean webkitCurrentPlaybackTargetIsWireless;
+#endif
+};

@@ -1,0 +1,82 @@
+/*
+ * Copyright (C) 2006, 2010 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+[
+    CustomIndexedSetter,
+    ExportMacro=WEBCORE_EXPORT,
+    JSGenerateToNativeObject,
+] interface HTMLSelectElement : HTMLElement {
+    [Reflect] attribute boolean autofocus;
+    [Reflect] attribute boolean disabled;
+    readonly attribute HTMLFormElement? form;
+    attribute boolean multiple;
+    [Reflect] attribute DOMString name;
+    [Reflect] attribute boolean required;
+
+#if defined(LANGUAGE_OBJECTIVE_C) && LANGUAGE_OBJECTIVE_C || defined(LANGUAGE_GOBJECT) && LANGUAGE_GOBJECT
+    attribute long size;
+#else
+    attribute unsigned long size;
+#endif
+
+    readonly attribute DOMString type;
+
+    readonly attribute HTMLOptionsCollection options;
+#if defined(LANGUAGE_OBJECTIVE_C) && LANGUAGE_OBJECTIVE_C
+    readonly attribute long length;
+#else
+    [SetterRaisesException] attribute unsigned long length;
+#endif
+
+#if defined(LANGUAGE_OBJECTIVE_C) && LANGUAGE_OBJECTIVE_C || defined(LANGUAGE_GOBJECT) && LANGUAGE_GOBJECT
+    getter Node item(unsigned long index);
+    Node namedItem(optional DOMString name);
+#else
+    getter HTMLOptionElement? item(unsigned long index);
+
+    // FIXME: Using "undefined" as default parameter value is wrong.
+    HTMLOptionElement? namedItem(optional DOMString name = "undefined");
+#endif
+
+    [ObjCLegacyUnnamedParameters, RaisesException] void add(HTMLElement element, optional HTMLElement? before = null);
+#if defined(LANGUAGE_JAVASCRIPT) && LANGUAGE_JAVASCRIPT
+    [RaisesException] void add(HTMLElement element, optional long index = 0);
+    // In JavaScript, we support both option index and option object parameters.
+    // As of this writing this cannot be auto-generated.
+    [Custom] void remove(/* indexOrOption */);
+#else
+    [ImplementedAs=removeByIndex] void remove(long index);
+#endif
+
+    readonly attribute HTMLCollection selectedOptions;
+    attribute long selectedIndex;
+
+    [TreatNullAs=LegacyNullString] attribute DOMString value; // FIXME: This should not use [TreatNullAs=LegacyNullString].
+
+    readonly attribute boolean willValidate;
+    readonly attribute ValidityState validity;
+    readonly attribute DOMString validationMessage;
+    boolean checkValidity();
+    void setCustomValidity(DOMString? error); // FIXME: Argument should not be nullable.
+
+    readonly attribute NodeList labels;
+
+    attribute DOMString autocomplete;
+};
