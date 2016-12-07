@@ -1,7 +1,7 @@
 # Sling Webkit
 ------------
 
-Sling WebKit is one of the WebKit based rendering engine for multi platform.
+Sling WebKit is one of the WebKit (r203260) based rendering engine for multi platform.
 
 The following markups are supported.
 
@@ -15,6 +15,20 @@ The following platforms are supported.
 
 * Android
 * Windows
+
+# Demo
+-----------
+* Graphics Benchmark : Chrome vs Sling
+https://youtu.be/IyQWcJd52pA
+ 
+* JavaScript Benchmark : Chrome vs Sling
+https://youtu.be/LfL8H-7QgKk
+ 
+* Web Page Navigation Performance : Chrome vs Sling
+https://youtu.be/h0pWlxH2QNo
+ 
+* GFX Tool for Sling
+https://youtu.be/8QlZQV3dvUs
 
 # Building
 -----------
