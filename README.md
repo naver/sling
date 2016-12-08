@@ -5,6 +5,7 @@ Sling is an open source Web content engine for browsers and other applications.
 It is forked from WebKit (r203260).
 
 Our goal is to be a lightweight web content engine available through all major platforms and IOT devices.
+![goals](https://cloud.githubusercontent.com/assets/2087774/20997226/f1f71768-bd46-11e6-9c1c-d9ffb3db63cf.PNG)
 
 The following markups are supported.
 
@@ -39,6 +40,9 @@ https://youtu.be/h0pWlxH2QNo
  
 * GFX Tool for Sling
 https://youtu.be/8QlZQV3dvUs
+
+# Schedule
+![schedule](https://cloud.githubusercontent.com/assets/2087774/20997227/f6a45c4e-bd46-11e6-9226-46fd3827b5be.PNG)
 
 # Building
 -----------
