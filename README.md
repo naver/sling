@@ -53,10 +53,13 @@ Reference the Installing Development Tools section below.
 
 https://webkit.org/webkit-on-windows/#installing-developer-tools
 
+* Recommend to locate "C:/GnuWin32" instead of "C:/Program Files (x86)/GnuWin32" directory when installing Bison, Flex and GPerf. Because you can meet errors like "error calling gperf failed" when compiling WebCoreDerivedSources.
+
 **Step-2 : Generating Visual Studio Solution files**
 
 * **using command-line**
 ```
+cd webkit
 mkdir WebKitBuild
 cd WebKitBuild
 cmake -G "Visual Studio 14 2015 Win64" -D PORT=WinCairo ..
